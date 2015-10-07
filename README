@@ -1,0 +1,79 @@
+Database Simulator v1.0
+
+goals:
+-maintain index of citizens, organized by social security number, and containing other data
+-read from database file into index strucutre on program start
+-write to database file on program end, or after structure has been modified
+features:
+-insert citizen along with data
+-update citizen's information
+-display information about a citizen, provided their social security number
+-display information for all citizens
+
+Citizen structure (in database, not actually in program):
+-char[10] for the social security number (*IMPORTANT*)
+-char[32] for their name
+-char[16] for their home city
+-char[2] for ther home state
+-unsigned int for their Date Of Birth, in MMDDYYYY format
+
+CitizenIndex structure
+-char[10] for social security number
+-unsigned int "index" for the citizen's index in the database file
+
+Citizens class:
+-CitizenIndex[] array
+-add method that checks for overflows and if so recreates the Array
+-update method that does bounds-checking, accepts index or social security (overloaded)
+-display method 
+-compress method that compresses and removes empty records [to be done next project]
+-delete method [to be done next project]
+
+Array methods:
+
+Search(social security number)
+	Simple linear search
+
+Init(ifstream database)
+	load the whole file
+	series of Add functions
+	
+Add(input data, ofstream database)
+	if there is room in the array:
+		creates CitizenIndex()
+		append the structure to the database file
+		populate structure in file with data
+		find index in the file, set key to the result
+		store in internal CitizenIndices array	
+	else
+		make a larger array (by 10)
+		copy and paste existing elements
+		redo function (this time there will be room, so it can do the first conditional)
+
+Update(social security, fstream database)
+	display menu asking user which property they want to Update
+	search index with social security number
+	get index, locate structure in file 
+	edit database
+	
+Display(social security number)
+	search index with social security number
+	get index, locate structure in file
+	display structure
+	
+DisplayAll()
+	just display the whole file
+
+Main application:
+Array containing CitizenIndices
+read 
+set of instructions in a command/loop interface
+
+
+List of available commands:
+add        - add a record to the database
+update     - update information about an existing record
+display    - display information about an existing record
+displayall - display information about all records
+help       - show help
+quit       - exit the program
