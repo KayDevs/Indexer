@@ -35,7 +35,7 @@ int main(int argc, char** argv)
 {
 	//read file and get handle
 	cout<<"Reading file..."<<endl;
-	fstream database("citizens.dat", ios::in | ios::out | ios::app | ios::binary);
+	fstream database;
 	if(!database)
 	{
 		cout<<"Error reading from file. Aborting."<<endl;
