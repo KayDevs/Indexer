@@ -41,6 +41,7 @@ class Citizens
 	public:
 		Citizens(fstream& database);
 		void add(char[SSN_SIZE], char[NAME_SIZE], char[ADDR_SIZE], char[PHONE_SIZE], fstream& database);
+		void remove(char[SSN_SIZE], fstream& database);
 		void update(char[SSN_SIZE], fstream& database);
 		void display(char[SSN_SIZE], fstream& database);
 		void displayAll(fstream& database);

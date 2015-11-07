@@ -15,6 +15,7 @@ It also handles loading and unloading of the file.
 enum commands 
 {
 	ADD,
+	REMOVE,
 	UPDATE,
 	DISPLAY,
 	DISPLAYALL,
@@ -24,6 +25,7 @@ enum commands
 commands hash_commands(string input)
 {
 	if(input == "add") return ADD;
+	if(input == "remove") return REMOVE;
 	if(input == "update") return UPDATE;
 	if(input == "display") return DISPLAY;
 	if(input == "displayall") return DISPLAYALL;	
@@ -61,6 +63,7 @@ int main(int argc, char** argv)
 		case HELP:
 			cout<<"List of available commands:"<<endl;
 			cout<<"add        - add a record to the database"<<endl;
+			cout<<"remove 		- removes a record from the database"<<endl;
 			cout<<"update     - update information about an existing record"<<endl;
 			cout<<"display    - display information about an existing record"<<endl;
 			cout<<"displayall - display information about all records"<<endl;
@@ -89,6 +92,11 @@ int main(int argc, char** argv)
 			cout<<"Please enter the address."<<endl;
 			cin.getline(addr, ADDR_SIZE);
 			citizens.add(ssn, name, addr, phone, database);
+			break;
+		case REMOVE:
+			cout<<"What is the social security number of the record you would like to remove?"<<endl;
+			cin>>ssn;
+			citizens.remove(ssn, database); //have the database point to the new file
 			break;
 		case UPDATE:
 			cout<<"What is the social security number of the record you would like to edit?"<<endl;

@@ -117,6 +117,64 @@ void Citizens::add(char ssn[SSN_SIZE], char name[NAME_SIZE], char addr[ADDR_SIZE
 	database.close();
 }
 
+void Citizens::remove(char ssn[SSN_SIZE], fstream& database)
+{
+	database.open("citizens.dat", ios::in | ios::out);
+	fstream new_database("citizens_t.dat", ios::app | ios::out);
+
+	int key = search(ssn);
+	if(key != -1)
+	{
+		for(int i = 0; i < key; ++i)
+		{
+			Citizen citizen;
+			database.seekg(i * sizeof(citizen));
+			database.read(reinterpret_cast<char *>(&citizen), sizeof(citizen));
+			new_database.seekp(i * sizeof(Citizen));
+			new_database.write(reinterpret_cast<char *>(&citizen), sizeof(Citizen));
+		}
+		//skip over the 'deleted' entry
+		for(int i = key + 1; i < ARRAY_SIZE; ++i)
+		{
+			Citizen citizen;
+			database.seekg(i * sizeof(citizen));
+			database.read(reinterpret_cast<char *>(&citizen), sizeof(citizen));
+			new_database.seekp(i * sizeof(Citizen));
+			new_database.write(reinterpret_cast<char *>(&citizen), sizeof(Citizen));
+		}
+	}
+	database.close();
+	new_database.close();
+	
+	std::remove("citizens.dat");
+	std::rename("citizens_t.dat", "citizens.dat");
+	
+	
+	//reread into index array
+	delete [] indices;
+	database.open("citizens.dat", ios::in | ios::app);
+	ARRAY_SIZE = 0;
+	database.seekg(0, database.end);
+	cout<<database.tellg()<<" bytes in file."<<endl;
+	ARRAY_SIZE = (int)database.tellg() / (int)sizeof(Citizen);
+	cout<<"The array is "<<ARRAY_SIZE<<" elements long."<<endl;
+	database.seekg(database.beg);
+	
+	//TODO: read into the indexing array.
+	indices = new CitizenIndex[ARRAY_SIZE];
+	for(int i = 0; i < ARRAY_SIZE; ++i)
+	{
+		database.seekg(i*sizeof(Citizen));
+		Citizen citizen;
+		database.read(reinterpret_cast<char *>(&citizen), sizeof(citizen));
+		for(int j = 0; j < SSN_SIZE; ++j) {
+			indices[i].ssn[j] = citizen.ssn[j];
+		}
+		indices[i].fileIndex = i;
+	}
+	database.close();
+}
+
 void Citizens::update(char ssn[SSN_SIZE], fstream& database)
 {
 	database.open("citizens.dat", ios::in | ios::out);
